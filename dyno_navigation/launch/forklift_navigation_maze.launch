@@ -1,0 +1,25 @@
+<launch>
+  <!-- Arguments -->
+  <arg name="map_file" default="$(find dyno_navigation)/maps/rdmaze.yaml"/>
+  <arg name="open_rviz" default="true"/>
+<arg name="use_sim_time" value="true"/>
+
+
+  <!-- Map server -->
+  <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+
+
+     <!-- ST simulator -->
+ <!--<node pkg="st_gazebo" name="fake_amcl_server" type="tf_broadcaster" />-->
+ <node pkg="fake_localization" name="fake_localization" type="fake_localization"/>
+
+  <!-- move_base -->
+  <include file="$(find dyno_navigation)/launch/move_base.launch">
+  </include>
+
+  <!-- rviz -->
+  <group if="$(arg open_rviz)"> 
+    <node pkg="rviz" type="rviz" name="rviz" required="true"
+          args="-d $(find dyno_navigation)/rviz/agv_navigation.rviz"/>
+  </group>
+</launch> 
